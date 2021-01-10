@@ -1,6 +1,8 @@
 require 'require_all'
 require_all 'lib'
 
+use Middlewares::KeyManager
+
 map('/users') do
   run Application::Users.new
 end

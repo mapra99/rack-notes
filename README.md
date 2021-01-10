@@ -77,3 +77,11 @@ response.set_cookie("Cookie-Name", "Cookie-Value") # not used often on REST APIs
 ```
 
 This object also adds some default headers stated by the HTTP spec.
+
+## Middlewares
+
+Rack supports middlewares. Middlewares are portions of code that are called before every request is sent to the `Application` classes.
+
+![](docs/middlewares.png)
+
+Middlewares also have the ability to interrupt the normal flow of a request, returning a response before it reaches to `Application`, or to any other middleware after it
