@@ -84,4 +84,44 @@ Rack supports middlewares. Middlewares are portions of code that are called befo
 
 ![](docs/middlewares.png)
 
-Middlewares also have the ability to interrupt the normal flow of a request, returning a response before it reaches to `Application`, or to any other middleware after it
+Middlewares also have the ability to interrupt the normal flow of a request, returning a response before it reaches to `Application`, or to any other middleware after it.
+
+Rack provides an ecosystem of pre-built middlewares that can be appended and solve often HTTP needs.
+
+## Rack in the Ruby ecosystem
+
+### Rack with Rails
+
+Every single rails app is actually a rack app. Rails is built on top of Rack. On a typical rails app, in the root folder a file called `config.ru` can be found:
+
+```ruby
+# This file is used by Rack-based servers to start the application.
+
+require_relative "config/environment"
+
+run Rails.application
+Rails.application.load_server
+```
+
+As on any other Rack app, we can map a new path to be attended by an `Application` class appart from rails.
+
+```ruby
+# This file is used by Rack-based servers to start the application.
+
+require_relative "config/environment"
+require_relative "lib/status_checker"
+
+map("/status") do
+  run StatusCheckerApplication.new
+end
+
+run Rails.application
+Rails.application.load_server
+```
+
+Also, rails provides a way to mount a separate rack application from the `config/routes.rb` file:
+```ruby
+Rails.application.routes.draw do
+  mount StatusCheckerApplication.new, at: "/status"
+end
+```
