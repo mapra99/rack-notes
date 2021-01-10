@@ -1,17 +1,21 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    byebug (11.1.3)
     nio4r (2.5.4)
     puma (5.1.1)
       nio4r (~> 2.0)
     rack (2.2.3)
+    require_all (3.0.0)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  byebug
   puma
   rack
+  require_all
 
 BUNDLED WITH
    2.2.3

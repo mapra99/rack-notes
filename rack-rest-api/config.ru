@@ -1,11 +1,10 @@
-require_relative 'users_application'
-require_relative 'rides_application'
-require_relative 'database'
+require 'require_all'
+require_all 'lib'
 
-map("/users") do
-  run UsersApplication.new
+map('/users') do
+  run Application::Users.new
 end
 
-map("/rides") do
-  run RidesApplication.new
+map('/rides') do
+  run Application::Rides.new
 end
