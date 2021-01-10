@@ -1,4 +1,4 @@
-# Rake!
+# Rack!
 
 ## What is Rack?
 Rack is a library to build HTTP ruby applications. It's used widely on the ruby ecosystems, being implemented inside rails, sinatra and grape. It also has the ability to integrate with webservers like puma and unicorn.
@@ -61,3 +61,19 @@ request.body  # the body, built from rack.input
 request.env   # the full original hash
 ```
 ### Responses
+Similarly to the requests, Rack offers a `Rack::Response` class.
+```ruby
+response = Rack::Response.new
+# these can be get and set
+response.status
+response.headers
+response.body # not recommendable to set it directly
+response.write("...") #use this instead, as many times as needed
+
+# this one is called to return the built array
+response.finish
+
+response.set_cookie("Cookie-Name", "Cookie-Value") # not used often on REST APIs, but come good for full monoliths.
+```
+
+This object also adds some default headers stated by the HTTP spec.

@@ -4,22 +4,30 @@ module Application
   class Rides
     def call(env)
       request = Rack::Request.new(env)
-      if env['PATH_INFO'] == ''
+      response = Rack::Response.new
+      if request.path_info.empty?
         if request.post?
           ride = JSON.parse(request.body.read)
-          Database::Rides.add(ride)
-          [200, {}, ["OK"]]
+          created_ride = Database::Rides.add(ride)
+          response.headers['Content-Type'] = 'application/json'
+          response.write(JSON.generate(created_ride))
         elsif request.get?
-          [200, {}, [Database::Rides.all.to_s]]
+          response.headers['Content-Type'] = 'application/json'
+          response.write(JSON.generate(Database::Rides.all))
         else
-          [404, {}, ['Not Found!']]
+          response.status = 404
+          response.write('Not Found!')
         end
-      elsif env['PATH_INFO'] =~ %r{/\d+}
-        id = env['PATH_INFO'].split('/').last.to_i
-        [200, {}, [Database::Rides.get(id).to_s]]
+      elsif request.path_info =~ %r{/\d+}
+        id = request.path_info.split('/').last.to_i
+        response.headers['Content-Type'] = 'application/json'
+        response.write(JSON.generate(Database::Rides.get(id)))
       else
-        [404, {}, ['Not Found!']]
+        response.status = 404
+        response.write('Not Found!')
       end
+
+      response.finish
     end
   end
 end

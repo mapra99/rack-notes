@@ -1,14 +1,23 @@
+require 'json'
+
 module Application
   class Users
     def call(env)
-      if env['PATH_INFO'] == ''
-        [200, {}, [Database::Users.all.to_s]]
-      elsif env['PATH_INFO'] =~ %r{/\d+}
-        id = env['PATH_INFO'].split('/').last.to_i
-        [200, {}, [Database::Users.get(id).to_s]]
+      request = Rack::Request.new(env)
+      response = Rack::Response.new
+      if request.path_info == ''
+        response.headers['Content-Type'] = 'application/json'
+        response.write(JSON.generate(Database::Users.all))
+      elsif request.path_info =~ %r{/\d+}
+        id = request.path_info.split('/').last.to_i
+        response.headers['Content-Type'] = 'application/json'
+        response.write(JSON.generate(Database::Users.get(id)))
       else
-        [404, {}, ['Not Found!']]
+        response.status = 404
+        response.write('Not Found!')
       end
+
+      response.finish
     end
   end
 end
