@@ -1,3 +1,4 @@
+require 'byebug'
 module Middlewares
   class KeyManager
     def initialize(app, _opts = {})
@@ -11,6 +12,7 @@ module Middlewares
       if user.nil?
         [403, {}, ['Forbidden']]
       else
+        env["rides_app.current_user"] = user[:id]
         @app.call(env)
       end
     end
